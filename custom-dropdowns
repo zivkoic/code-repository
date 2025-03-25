@@ -1,0 +1,20 @@
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const dropdowns = document.querySelectorAll(".benefici-dopdown");
+
+    if (dropdowns.length > 0) {
+        // Set the first dropdown as active initially
+        dropdowns[0].classList.add("active");
+
+        dropdowns.forEach(dropdown => {
+            dropdown.addEventListener("click", function () {
+                // Remove active class from all dropdowns
+                dropdowns.forEach(item => item.classList.remove("active"));
+                
+                // Add active class to the clicked one
+                this.classList.add("active");
+            });
+        });
+    }
+});
+</script>
