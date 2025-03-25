@@ -1,0 +1,60 @@
+<style>
+.project-asset {
+    transition: transform 0.5s ease-in-out;
+    will-change: transform;
+}
+
+</style>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const slides = document.querySelectorAll(".project-asset");
+    const indicators = document.querySelectorAll(".project-asset-indicator");
+    let currentIndex = 0;
+    const slideInterval = 7000; // 7 seconds
+    let interval;
+
+    function changeSlide(index = null) {
+        // If index is provided (user clicked an indicator), update currentIndex
+        if (index !== null) {
+            currentIndex = index;
+            resetTimer();
+        }
+
+        // Move all slides by adjusting their transform
+        slides.forEach((slide) => {
+            slide.style.transform = `translateX(${-100 * currentIndex}%)`;
+        });
+
+        // Update indicators: add .active to all passed ones
+        indicators.forEach((indicator, i) => {
+            if (i <= currentIndex) {
+                indicator.classList.add("active");
+            } else {
+                indicator.classList.remove("active");
+            }
+        });
+
+        // Move to the next slide (loop back when reaching the last)
+        currentIndex = (currentIndex + 1) % slides.length;
+    }
+
+    function resetTimer() {
+        clearInterval(interval);
+        interval = setInterval(changeSlide, slideInterval);
+    }
+
+    // Make indicators clickable
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener("click", () => {
+            changeSlide(index);
+        });
+    });
+
+    // Initial setup
+    changeSlide();
+    interval = setInterval(changeSlide, slideInterval);
+});
+
+</script>
