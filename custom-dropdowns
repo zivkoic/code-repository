@@ -3,16 +3,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const dropdowns = document.querySelectorAll(".benefici-dopdown");
 
     if (dropdowns.length > 0) {
-        // Set the first dropdown as active initially
+        // Set the first dropdown and its H3 as active initially
         dropdowns[0].classList.add("active");
+        const firstHeading = dropdowns[0].querySelector("h3");
+        if (firstHeading) firstHeading.classList.add("active");
 
         dropdowns.forEach(dropdown => {
             dropdown.addEventListener("click", function () {
-                // Remove active class from all dropdowns
-                dropdowns.forEach(item => item.classList.remove("active"));
-                
-                // Add active class to the clicked one
+                // Remove active class from all dropdowns and their H3s
+                dropdowns.forEach(item => {
+                    item.classList.remove("active");
+                    const heading = item.querySelector("h3");
+                    if (heading) heading.classList.remove("active");
+                });
+
+                // Add active class to the clicked dropdown and its H3
                 this.classList.add("active");
+                const heading = this.querySelector("h3");
+                if (heading) heading.classList.add("active");
             });
         });
     }
