@@ -1,0 +1,17 @@
+<script>
+function matchHeights() {
+    const textWrappers = document.querySelectorAll(".project-text-wrapper");
+    const assetWrappers = document.querySelectorAll(".progress-asset-wrapper");
+
+    if (textWrappers.length === assetWrappers.length) {
+        textWrappers.forEach((textWrapper, index) => {
+            assetWrappers[index].style.height = `${textWrapper.offsetHeight}px`;
+        });
+    }
+}
+
+// Run the function on page load and resize
+window.addEventListener("load", matchHeights);
+window.addEventListener("resize", matchHeights);
+
+</script>
