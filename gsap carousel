@@ -1,4 +1,8 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/ScrollTrigger.min.js"></script>
+<!-- GSAP Core (Required) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<!-- Optional: ScrollTrigger (Only if you're using it) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <script>
 const slider = document.querySelector('.carousel');
 const clone = slider.cloneNode(true);
