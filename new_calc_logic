@@ -1,0 +1,159 @@
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(function () {
+        // Get references to input fields and spans
+        const numberInput = document.getElementById("number"),
+              dragNumberInput = document.getElementById("drag-number"),
+              investmentAmount = document.getElementById("Investment-amount"),
+              taxSpan = document.querySelector(".tax-deduction-span"),
+              roiSpan = document.querySelector(".roi-span"),
+              annualEarningSpan = document.querySelector(".annual-earning-span"),
+              taxInfoSpan = document.querySelector(".tax-info"),
+              fsRangeSlider = document.querySelector(".fs-rangeslider_wrapper"); // Assuming this is the Finsweet range slider
+
+        // Set default placeholder text for the number input field
+        numberInput.placeholder = "Ammontare";
+
+        // Function to format numbers with two decimal places and locale string format
+        function formatNumber(value) {
+            return parseFloat(value).toLocaleString("it-IT", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        // Function to update calculated values
+        function updateValues(value) {
+            const numericValue = parseFloat(value) || 0;
+            taxSpan.textContent = formatNumber(numericValue * 0.1957); //Calculating the tax ("DETRAIBILE" su Tally)
+            taxInfoSpan.textContent = formatNumber(numericValue * 0.1957); //Calculating the tax for the popup (should be the same as upper one)
+            roiSpan.textContent = formatNumber(numericValue * 2.605); //Calculating the return on investment (GUADAGNO TOTALE SU 30 ANNI)
+            annualEarningSpan.textContent = formatNumber(numericValue * 2.605 / 30); //Calculating the annual earnings (GUADAGNO TOTALE SU 30 ANNI / 30 anni)
+        }
+
+        // Clear initial input values
+        numberInput.value = '';
+        dragNumberInput.value = '';
+        investmentAmount.value = '';
+
+        let userInteracted = false;
+
+        // Event listener for manual number input field
+        numberInput.addEventListener("input", function () {
+            let value = numberInput.value.replace(/[^0-9,.€]/g, "");
+            value = value.replace(/(,\d{3})+/g, "");
+            investmentAmount.value = value;
+            dragNumberInput.value = value;
+            updateValues(value);
+            userInteracted = true;
+        });
+
+        // Format input with currency symbol on blur
+        numberInput.addEventListener("blur", function () {
+            if (numberInput.value && !numberInput.value.includes("€")) {
+                numberInput.value = formatNumber(numberInput.value) + "€";
+            }
+        });
+
+        // Remove currency symbol when input is focused
+        numberInput.addEventListener("focus", function () {
+            if (numberInput.value.includes("€")) {
+                numberInput.value = numberInput.value.replace("€", "");
+            }
+        });
+
+        // Event listener for drag number input field
+        dragNumberInput.addEventListener("input", function () {
+            let value = dragNumberInput.value.replace(/[^0-9,.]/g, "");
+            if (value) {
+                numberInput.value = formatNumber(value) + "€";
+            }
+            investmentAmount.value = value;
+            updateValues(value);
+            userInteracted = true;
+            
+            // Update Finsweet range slider value
+            if (fsRangeSlider) {
+                fsRangeSlider.value = value;
+                fsRangeSlider.dispatchEvent(new Event("input"));
+            }
+        });
+
+        // Format drag input value on blur
+        dragNumberInput.addEventListener("blur", function () {
+            if (dragNumberInput.value) {
+                dragNumberInput.value = formatNumber(dragNumberInput.value);
+            }
+        });
+
+        // Reset values when the user has not interacted manually
+        numberInput.addEventListener("input", function () {
+            if (!userInteracted) {
+                dragNumberInput.value = "";
+            }
+        });
+
+        dragNumberInput.addEventListener("input", function () {
+            if (!userInteracted) {
+                numberInput.value = "";
+            }
+        });
+    }, 2000);
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const manualNumberInput = document.getElementById("number");
+  const manualDragInput = document.getElementById("drag-number");
+  const sliderRoad = document.getElementById("calc-road");
+  const sliderHandle = document.getElementById("calc-handle");
+  const sliderFill = document.getElementById("calc-fill");
+
+  if (!manualNumberInput || !manualDragInput || !sliderRoad || !sliderHandle || !sliderFill) {
+    console.warn("Slider UI update: Required elements not found");
+    return;
+  }
+
+  const SLIDER_MIN = 0;
+  const SLIDER_MAX = 100000;
+
+  function parseManualValue(val) {
+    if (!val) return 0;
+    return parseFloat(
+      val
+        .toString()
+        .replace(/€/g, "")
+        .replace(/\./g, "")
+        .replace(/,/g, ".")
+        .trim()
+    ) || 0;
+  }
+
+  function updateSliderUIFromValue(val) {
+    const clampedVal = Math.min(Math.max(val, SLIDER_MIN), SLIDER_MAX);
+    const percentVal = (clampedVal / SLIDER_MAX) * 100;
+
+    const roadWidthPx = sliderRoad.clientWidth;
+    const handleWidthPx = sliderHandle.offsetWidth || 0;
+    const leftPosPx = (roadWidthPx * percentVal) / 100 - handleWidthPx / 2;
+
+    sliderHandle.style.left = ${leftPosPx}px;
+    sliderFill.style.width = ${percentVal}%;
+  }
+
+  function handleManualInputsChange() {
+    let value = parseManualValue(manualNumberInput.value);
+    if (value === 0) {
+      value = parseManualValue(manualDragInput.value);
+    }
+    updateSliderUIFromValue(value);
+  }
+
+  manualNumberInput.addEventListener("input", handleManualInputsChange);
+  manualDragInput.addEventListener("input", handleManualInputsChange);
+
+  // Initialize on page load
+  handleManualInputsChange();
+});
+</script>
