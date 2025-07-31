@@ -1,0 +1,20 @@
+{
+  "name": "GridShare",
+  "short_name": "GS",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "https://cdn.prod.website-files.com/6852d481fc7bc80f2e60cafc/688b63ea2c03311f742663aa_Group.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn.prod.website-files.com/6852d481fc7bc80f2e60cafc/688b63eab53ef7d16e35d416_Group-1.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
